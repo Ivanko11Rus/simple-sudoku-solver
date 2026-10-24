@@ -23,8 +23,9 @@ arrow.
 - `Enter` presses **«Решить»** (Solve).
 
 When done, press **«Решить»** (Solve) — the last solution is kept in the
-second panel. The program also highlights contradictions automatically
-(very handy for occasional single mistakes).
+second panel (**«Предыдущее решение»**, Previous solution). The program also
+highlights contradictions automatically (very handy for occasional single
+mistakes).
 
 **Note:** if the grid is partially filled (or the puzzle has multiple
 solutions), the solver will still find *a* valid solution — but not
@@ -72,8 +73,8 @@ Full license text — in the [LICENSE](LICENSE) file.
 - `Enter` нажимает **«Решить»**.
 
 В конце ввода нажмите **«Решить»** — последнее решение будет сохранено во
-втором поле. Программа также автоматически подсветит противоречия (очень
-помогает при случайных и одиночных ошибках).
+втором поле (**«Предыдущее решение»**). Программа также автоматически
+подсветит противоречия (очень помогает при случайных и одиночных ошибках).
 
 **Внимание:** если поле заполнено не до конца (или у головоломки несколько
 решений), решатель всё равно найдёт *какое-то* валидное решение — но не
