@@ -9,11 +9,68 @@
 
   :root {
     --cell: min(calc((100vw - 60px) / 9), 110px);
+
+    /* ---- Светлая тема (по умолчанию) ---- */
+    --bg: #f0f2f5;
+    --panel-bg: #ffffff;
+    --text: #333;
+    --text-muted: #555;
+    --grid-border: #222;
+    --cell-border: #bbb;
+    --cell-bg: #ffffff;
+    --color-given: #111;
+    --color-solved: #2e9e5b;
+    --color-preview: #2e9e5b;
+    --preview-bg: #fafafa;
+    --preview-overlay-bg: rgba(255,255,255,0.85);
+    --preview-overlay-text: #999;
+    --highlight-bg: #bcd7f5;
+    --selected-bg: #4a90e2;
+    --selected-text: #ffffff;
+    --conflict-bg: #ffcdd2;
+    --btn-bg: #1976d2;
+    --btn-bg-hover: #1565c0;
+    --btn-secondary-bg: #78909c;
+    --btn-secondary-bg-hover: #607d8b;
+    --btn-text: #ffffff;
+    --status-error: #c62828;
+    --status-ok: #2e7d32;
+  }
+
+  /* ---- Тёмная тема ---- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121212;
+      --panel-bg: #1e1e1e;
+      --text: #e0e0e0;
+      --text-muted: #aaaaaa;
+      --grid-border: #e0e0e0;
+      --cell-border: #444;
+      --cell-bg: #1e1e1e;
+      --color-given: #f0f0f0;
+      --color-solved: #4ade80;
+      --color-preview: #4ade80;
+      --preview-bg: #181818;
+      --preview-overlay-bg: rgba(18,18,18,0.85);
+      --preview-overlay-text: #777;
+      --highlight-bg: #2a3a52;
+      --selected-bg: #2f6fb5;
+      --selected-text: #ffffff;
+      --conflict-bg: #5a2a2a;
+      --btn-bg: #2f6fb5;
+      --btn-bg-hover: #255a96;
+      --btn-secondary-bg: #4a5a64;
+      --btn-secondary-bg-hover: #3a474f;
+      --btn-text: #ffffff;
+      --status-error: #ef9a9a;
+      --status-ok: #81c784;
+    }
   }
 
   body {
     font-family: system-ui, sans-serif;
-    background: #f0f2f5;
+    background: var(--bg);
+    color: var(--text);
     margin: 0;
     padding: 16px;
     display: flex;
@@ -23,6 +80,7 @@
     min-height: 100vh;
     box-sizing: border-box;
     overflow-x: hidden;
+    transition: background .2s, color .2s;
   }
   .panel {
     display: flex;
@@ -34,7 +92,7 @@
   h2 {
     margin: 0 0 calc(var(--cell) * 0.2) 0;
     font-size: clamp(16px, calc(var(--cell) * 0.42), 28px);
-    color: #333;
+    color: var(--text);
     text-align: center;
   }
 
@@ -42,8 +100,8 @@
     display: grid;
     grid-template-columns: repeat(9, var(--cell));
     grid-template-rows: repeat(9, var(--cell));
-    border: 3px solid #222;
-    background: #fff;
+    border: 3px solid var(--grid-border);
+    background: var(--cell-bg);
     user-select: none;
   }
   .cell {
@@ -52,13 +110,15 @@
     justify-content: center;
     font-size: calc(var(--cell) * 0.48);
     font-weight: 600;
-    color: #2e9e5b;           /* решение — зелёный */
-    border-right: 1px solid #bbb;
-    border-bottom: 1px solid #bbb;
+    color: var(--color-solved);
+    background: var(--cell-bg);
+    border-right: 1px solid var(--cell-border);
+    border-bottom: 1px solid var(--cell-border);
     position: relative;
+    transition: background .12s, color .12s;
   }
-  .cell.thick-right  { border-right: 3px solid #222; }
-  .cell.thick-bottom { border-bottom: 3px solid #222; }
+  .cell.thick-right  { border-right: 3px solid var(--grid-border); }
+  .cell.thick-bottom { border-bottom: 3px solid var(--grid-border); }
   .cell:nth-child(9n) { border-right: none; }
   .cell:nth-last-child(-n+9) { border-bottom: none; }
 
@@ -70,7 +130,7 @@
     text-align: center;
     font-size: calc(var(--cell) * 0.48);
     font-weight: 600;
-    color: #2e9e5b;           /* решение — зелёный */
+    color: var(--color-solved);
     background: transparent;
     padding: 0;
     caret-color: transparent;
@@ -78,18 +138,16 @@
   .cell input:focus { background: transparent; }
   .cell input::selection { background: transparent; }
 
-  .cell.given input {
-    color: #111;              /* условия — почти чёрный */
-  }
+  .cell.given input { color: var(--color-given); }
 
-  .cell.highlight { background: #bcd7f5; }
-  .cell.selected  { background: #4a90e2; }
-  .cell.selected input { color: #fff; }
-  .cell.conflict  { background: #ffcdd2; }
+  .cell.highlight { background: var(--highlight-bg); }
+  .cell.selected  { background: var(--selected-bg); }
+  .cell.selected input { color: var(--selected-text); }
+  .cell.conflict  { background: var(--conflict-bg); }
 
   .preview-cell {
-    color: #2e9e5b;           /* в «предыдущем решении» тоже зелёный */
-    background: #fafafa;
+    color: var(--color-preview);
+    background: var(--preview-bg);
   }
 
   .preview-wrap { position: relative; }
@@ -101,8 +159,8 @@
     align-items: center;
     justify-content: center;
     font-size: calc(var(--cell) * 0.32);
-    color: #999;
-    background: rgba(255,255,255,0.85);
+    color: var(--preview-overlay-text);
+    background: var(--preview-overlay-bg);
     pointer-events: none;
     text-align: center;
     padding: 0 20px;
@@ -115,6 +173,7 @@
     gap: calc(var(--cell) * 0.2);
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
   }
   button {
     padding: calc(var(--cell) * 0.22) calc(var(--cell) * 0.4);
@@ -122,27 +181,41 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    background: #1976d2;
-    color: #fff;
+    background: var(--btn-bg);
+    color: var(--btn-text);
     font-weight: 600;
     transition: background .15s;
   }
-  button:hover { background: #1565c0; }
-  button.secondary { background: #78909c; }
-  button.secondary:hover { background: #607d8b; }
+  button:hover { background: var(--btn-bg-hover); }
+  button.secondary { background: var(--btn-secondary-bg); }
+  button.secondary:hover { background: var(--btn-secondary-bg-hover); }
+
+  /* Кнопка переключения темы — круглая, без текста */
+  #themeBtn {
+    padding: 0;
+    width: calc(var(--cell) * 0.9);
+    height: calc(var(--cell) * 0.9);
+    border-radius: 50%;
+    font-size: calc(var(--cell) * 0.5);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--btn-secondary-bg);
+  }
+  #themeBtn:hover { background: var(--btn-secondary-bg-hover); }
 
   .status {
     margin-top: calc(var(--cell) * 0.2);
     font-size: clamp(12px, calc(var(--cell) * 0.26), 18px);
-    color: #555;
+    color: var(--text-muted);
     min-height: 1em;
     text-align: center;
     max-width: calc(var(--cell) * 9);
   }
-  .status.error { color: #c62828; font-weight: 600; }
-  .status.ok    { color: #2e7d32; font-weight: 600; }
+  .status.error { color: var(--status-error); font-weight: 600; }
+  .status.ok    { color: var(--status-ok); font-weight: 600; }
 
-  /* Телефоны: меньше отступы, поле почти во всю ширину */
   @media (max-width: 600px) {
     body {
       padding: 8px;
@@ -153,7 +226,6 @@
     }
   }
 
-  /* Два поля в ряд — только на широких экранах */
   @media (min-width: 1200px) {
     body {
       flex-direction: row;
@@ -166,6 +238,60 @@
       --cell: clamp(48px, 4.4vmin, 80px);
     }
   }
+
+  /* Ручное переопределение темы через data-theme на <html> */
+  html[data-theme="light"] {
+    --bg: #f0f2f5;
+    --panel-bg: #ffffff;
+    --text: #333;
+    --text-muted: #555;
+    --grid-border: #222;
+    --cell-border: #bbb;
+    --cell-bg: #ffffff;
+    --color-given: #111;
+    --color-solved: #2e9e5b;
+    --color-preview: #2e9e5b;
+    --preview-bg: #fafafa;
+    --preview-overlay-bg: rgba(255,255,255,0.85);
+    --preview-overlay-text: #999;
+    --highlight-bg: #bcd7f5;
+    --selected-bg: #4a90e2;
+    --selected-text: #ffffff;
+    --conflict-bg: #ffcdd2;
+    --btn-bg: #1976d2;
+    --btn-bg-hover: #1565c0;
+    --btn-secondary-bg: #78909c;
+    --btn-secondary-bg-hover: #607d8b;
+    --btn-text: #ffffff;
+    --status-error: #c62828;
+    --status-ok: #2e7d32;
+  }
+  html[data-theme="dark"] {
+    --bg: #121212;
+    --panel-bg: #1e1e1e;
+    --text: #e0e0e0;
+    --text-muted: #aaaaaa;
+    --grid-border: #e0e0e0;
+    --cell-border: #444;
+    --cell-bg: #1e1e1e;
+    --color-given: #f0f0f0;
+    --color-solved: #4ade80;
+    --color-preview: #4ade80;
+    --preview-bg: #181818;
+    --preview-overlay-bg: rgba(18,18,18,0.85);
+    --preview-overlay-text: #777;
+    --highlight-bg: #2a3a52;
+    --selected-bg: #2f6fb5;
+    --selected-text: #ffffff;
+    --conflict-bg: #5a2a2a;
+    --btn-bg: #2f6fb5;
+    --btn-bg-hover: #255a96;
+    --btn-secondary-bg: #4a5a64;
+    --btn-secondary-bg-hover: #3a474f;
+    --btn-text: #ffffff;
+    --status-error: #ef9a9a;
+    --status-ok: #81c784;
+  }
 </style>
 </head>
 <body>
@@ -176,6 +302,7 @@
   <div class="controls">
     <button id="solveBtn">Решить</button>
     <button class="secondary" id="clearBtn">Очистить</button>
+    <button id="themeBtn" title="Переключить тему">🌙</button>
   </div>
   <div class="status" id="status"></div>
 </div>
@@ -189,6 +316,40 @@
 </div>
 
 <script>
+/* ============================================================
+   ТЕМА
+   ============================================================ */
+(function initTheme() {
+  const saved = localStorage.getItem('sudoku-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.dataset.theme = theme;
+  updateThemeBtn(theme);
+
+  // Следим за системной темой, если пользователь не выбрал вручную
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (localStorage.getItem('sudoku-theme')) return;
+    const t = e.matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+    updateThemeBtn(t);
+  });
+})();
+
+function updateThemeBtn(theme) {
+  const btn = document.getElementById('themeBtn');
+  if (!btn) return;
+  btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  btn.title = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
+}
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const cur = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('sudoku-theme', next);
+  updateThemeBtn(next);
+});
+
 /* ============================================================
    СОСТОЯНИЕ
    ============================================================ */
@@ -486,7 +647,6 @@ document.getElementById('solveBtn').addEventListener('click', () => {
   lastSolution = work.map(row => row.slice());
   renderPreview();
 
-  // Сбросить фокус и подсветку, чтобы не мозолили глаза синие полосы
   if (document.activeElement && document.activeElement.blur) {
     document.activeElement.blur();
   }

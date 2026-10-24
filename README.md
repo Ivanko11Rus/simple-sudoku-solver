@@ -24,6 +24,10 @@ second panel. The program also highlights contradictions automatically
 
 To reset the board, press **«Очистить»** (Clear).
 
+**Dark theme.** There's a dark theme — tap the cheese-banana / sun icon to
+the right of the buttons to switch. (It's actually a moon emoji, but it
+does look like a cheese banana.)
+
 After solving, solver-filled digits are green, and digits entered by you
 are dark.
 
@@ -57,6 +61,12 @@ Full license text — in the [LICENSE](LICENSE) file.
 В конце ввода нажмите **«Решить»** — последнее решение будет сохранено во
 втором поле. Программа также автоматически подсветит противоречия (очень
 помогает при случайных и одиночных ошибках).
+
+Чтобы очистить поле, нажмите **«Очистить»**.
+
+**Тёмная тема.** Есть тёмная тема — тыкайте на иконку сырного банана или
+солнца справа от кнопок, чтобы переключить. (На самом деле это эмодзи
+луны, но выглядит как сырный банан.)
 
 После решения зелёным будут подсвечены цифры от решателя, тёмным —
 введённые изначально для решения.
