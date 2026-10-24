@@ -28,8 +28,8 @@ To reset the board, press **«Очистить»** (Clear).
 the right of the buttons to switch. (It's actually a moon emoji, but it
 does look like a cheese banana.)
 
-After solving, solver-filled digits are green, and digits entered by you
-are dark.
+After solving, solver-filled digits are green, and digits you entered keep
+the default text color (dark in light theme, light in dark theme).
 
 ## License
 
@@ -68,8 +68,8 @@ Full license text — in the [LICENSE](LICENSE) file.
 солнца справа от кнопок, чтобы переключить. (На самом деле это эмодзи
 луны, но выглядит как сырный банан.)
 
-После решения зелёным будут подсвечены цифры от решателя, тёмным —
-введённые изначально для решения.
+После решения зелёным будут подсвечены цифры от решателя, чёрным или белым
+(в зависимости от темы) — введённые изначально для решения.
 
 ## Лицензия
 

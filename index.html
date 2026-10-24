@@ -10,7 +10,6 @@
   :root {
     --cell: min(calc((100vw - 60px) / 9), 110px);
 
-    /* ---- Светлая тема (по умолчанию) ---- */
     --bg: #f0f2f5;
     --panel-bg: #ffffff;
     --text: #333;
@@ -37,7 +36,6 @@
     --status-ok: #2e7d32;
   }
 
-  /* ---- Тёмная тема ---- */
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #121212;
@@ -190,7 +188,6 @@
   button.secondary { background: var(--btn-secondary-bg); }
   button.secondary:hover { background: var(--btn-secondary-bg-hover); }
 
-  /* Кнопка переключения темы — круглая, без текста */
   #themeBtn {
     padding: 0;
     width: calc(var(--cell) * 0.9);
@@ -216,6 +213,14 @@
   .status.error { color: var(--status-error); font-weight: 600; }
   .status.ok    { color: var(--status-ok); font-weight: 600; }
 
+  /* Кнопка под «Предыдущим решением» */
+  .preview-controls {
+    margin-top: calc(var(--cell) * 0.3);
+    display: flex;
+    justify-content: center;
+  }
+  .preview-controls.hidden { display: none; }
+
   @media (max-width: 600px) {
     body {
       padding: 8px;
@@ -239,7 +244,6 @@
     }
   }
 
-  /* Ручное переопределение темы через data-theme на <html> */
   html[data-theme="light"] {
     --bg: #f0f2f5;
     --panel-bg: #ffffff;
@@ -313,6 +317,9 @@
     <div class="grid" id="previewGrid"></div>
     <div class="preview-overlay" id="previewOverlay">Пока нет решения</div>
   </div>
+  <div class="preview-controls hidden" id="previewControls">
+    <button class="secondary" id="clearSolutionBtn">Очистить</button>
+  </div>
 </div>
 
 <script>
@@ -326,7 +333,6 @@
   document.documentElement.dataset.theme = theme;
   updateThemeBtn(theme);
 
-  // Следим за системной темой, если пользователь не выбрал вручную
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (localStorage.getItem('sudoku-theme')) return;
     const t = e.matches ? 'dark' : 'light';
@@ -364,6 +370,7 @@ let lastSolution = null;
 const gridEl         = document.getElementById('grid');
 const previewEl      = document.getElementById('previewGrid');
 const previewOverlay = document.getElementById('previewOverlay');
+const previewControls = document.getElementById('previewControls');
 const statusEl       = document.getElementById('status');
 
 const cellEls    = [];
@@ -607,6 +614,38 @@ function renderPreview() {
     }
   }
   previewOverlay.classList.toggle('hidden', !!lastSolution);
+  previewControls.classList.toggle('hidden', !lastSolution);
+}
+
+/* ============================================================
+   СОХРАНЕНИЕ ПРЕДЫДУЩЕГО РЕШЕНИЯ
+   ============================================================ */
+function saveLastSolution() {
+  try {
+    if (lastSolution) {
+      localStorage.setItem('sudoku-last-solution', JSON.stringify(lastSolution));
+    } else {
+      localStorage.removeItem('sudoku-last-solution');
+    }
+  } catch {}
+}
+
+function loadLastSolution() {
+  try {
+    const raw = localStorage.getItem('sudoku-last-solution');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length !== 9) return null;
+    for (const row of parsed) {
+      if (!Array.isArray(row) || row.length !== 9) return null;
+      for (const v of row) {
+        if (typeof v !== 'number' || v < 0 || v > 9) return null;
+      }
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 /* ============================================================
@@ -645,6 +684,7 @@ document.getElementById('solveBtn').addEventListener('click', () => {
   }
 
   lastSolution = work.map(row => row.slice());
+  saveLastSolution();
   renderPreview();
 
   if (document.activeElement && document.activeElement.blur) {
@@ -656,11 +696,11 @@ document.getElementById('solveBtn').addEventListener('click', () => {
   checkConflicts();
 
   statusEl.className = 'status ok';
-  statusEl.textContent = `Решено за ${dt.toFixed(1)} мс. Условия — чёрным, решение — зелёным.`;
+  statusEl.textContent = `Решено за ${dt.toFixed(1)} мс.`;
 });
 
 /* ============================================================
-   КНОПКА «ОЧИСТИТЬ»
+   КНОПКА «ОЧИСТИТЬ» (рабочее поле)
    ============================================================ */
 document.getElementById('clearBtn').addEventListener('click', () => {
   board = Array.from({length: SIZE}, () => Array(SIZE).fill(0));
@@ -678,8 +718,18 @@ document.getElementById('clearBtn').addEventListener('click', () => {
 });
 
 /* ============================================================
+   КНОПКА «ОЧИСТИТЬ» (предыдущее решение)
+   ============================================================ */
+document.getElementById('clearSolutionBtn').addEventListener('click', () => {
+  lastSolution = null;
+  saveLastSolution();
+  renderPreview();
+});
+
+/* ============================================================
    ИНИЦИАЛИЗАЦИЯ
    ============================================================ */
+lastSolution = loadLastSolution();
 renderPreview();
 checkConflicts();
 cellEls[0][0].input.focus();
