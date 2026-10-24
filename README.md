@@ -18,9 +18,18 @@ the puzzle in blindly.
 **To mark an empty cell, type `0`** — or just move to the next cell with an
 arrow.
 
+**Keyboard shortcuts.**
+- `Backspace` clears the current cell.
+- `Enter` presses **«Решить»** (Solve).
+
 When done, press **«Решить»** (Solve) — the last solution is kept in the
 second panel. The program also highlights contradictions automatically
 (very handy for occasional single mistakes).
+
+**Note:** if the grid is partially filled (or the puzzle has multiple
+solutions), the solver will still find *a* valid solution — but not
+necessarily the one the puzzle author intended. If the grid contains
+conflicts, the solver will refuse to run and highlight them.
 
 To reset the board, press **«Очистить»** (Clear).
 
@@ -58,9 +67,18 @@ Full license text — in the [LICENSE](LICENSE) file.
 **Чтобы указать пустую ячейку, введите `0`** — или просто стрелкой
 перейдите на следующую ячейку.
 
+**Горячие клавиши.**
+- `Backspace` очищает текущую клетку.
+- `Enter` нажимает **«Решить»**.
+
 В конце ввода нажмите **«Решить»** — последнее решение будет сохранено во
 втором поле. Программа также автоматически подсветит противоречия (очень
 помогает при случайных и одиночных ошибках).
+
+**Внимание:** если поле заполнено не до конца (или у головоломки несколько
+решений), решатель всё равно найдёт *какое-то* валидное решение — но не
+обязательно то, что задумал автор. Если в условии есть конфликты,
+решатель откажется запускаться и подсветит их.
 
 Чтобы очистить поле, нажмите **«Очистить»**.
 
