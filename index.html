@@ -337,6 +337,7 @@
     const t = e.matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = t;
     updateThemeBtn(t);
+    refreshStatus();
   });
 })();
 
@@ -353,7 +354,31 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   document.documentElement.dataset.theme = next;
   localStorage.setItem('sudoku-theme', next);
   updateThemeBtn(next);
+  refreshStatus();
 });
+
+/* ============================================================
+   СТАТУС (с возможностью перерисовать при смене темы)
+   ============================================================ */
+const statusEl = document.getElementById('status');
+// Фабрика текста: null — статус пустой/ошибочный, функция — текст с учётом темы
+let statusFactory = null;
+
+function setStatus(cls, factory) {
+  statusEl.className = 'status' + (cls ? ' ' + cls : '');
+  statusFactory = factory;
+  statusEl.textContent = factory ? factory() : '';
+}
+
+function refreshStatus() {
+  if (statusFactory) statusEl.textContent = statusFactory();
+}
+
+function clearStatus() {
+  statusEl.className = 'status';
+  statusFactory = null;
+  statusEl.textContent = '';
+}
 
 /* ============================================================
    СОСТОЯНИЕ
@@ -370,7 +395,6 @@ const gridEl         = document.getElementById('grid');
 const previewEl      = document.getElementById('previewGrid');
 const previewOverlay = document.getElementById('previewOverlay');
 const previewControls = document.getElementById('previewControls');
-const statusEl       = document.getElementById('status');
 const solveBtn       = document.getElementById('solveBtn');
 
 const cellEls    = [];
@@ -457,13 +481,9 @@ function onInputKeyDown(e, r, c) {
 // Глобальный Enter — работает, даже если фокус вне клетки
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
-  // Не перехватываем, если фокус на кнопке (иначе двойной клик)
   const tag = document.activeElement && document.activeElement.tagName;
   if (tag === 'BUTTON') return;
-  if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-    // уже обработано в onInputKeyDown
-    return;
-  }
+  if (tag === 'INPUT') return; // уже обработано в onInputKeyDown
   e.preventDefault();
   solveBtn.click();
 });
@@ -670,12 +690,10 @@ function loadLastSolution() {
    КНОПКА «РЕШИТЬ»
    ============================================================ */
 solveBtn.addEventListener('click', () => {
-  statusEl.className = 'status';
-  statusEl.textContent = '';
+  clearStatus();
 
   if (hasConflicts(board)) {
-    statusEl.className = 'status error';
-    statusEl.textContent = 'В условии есть конфликты (одинаковые цифры в строке/столбце/блоке).';
+    setStatus('error', () => 'В условии есть конфликты (одинаковые цифры в строке/столбце/блоке).');
     return;
   }
 
@@ -685,8 +703,7 @@ solveBtn.addEventListener('click', () => {
   const dt = performance.now() - t0;
 
   if (!ok) {
-    statusEl.className = 'status error';
-    statusEl.textContent = 'Решение не найдено — возможно, в условии ошибка.';
+    setStatus('error', () => 'Решение не найдено — возможно, в условии ошибка.');
     return;
   }
 
@@ -713,8 +730,12 @@ solveBtn.addEventListener('click', () => {
 
   checkConflicts();
 
-  statusEl.className = 'status ok';
-  statusEl.textContent = `Решено за ${dt.toFixed(1)} мс.`;
+  // Фабрика текста: при смене темы пересчитается цвет
+  setStatus('ok', () => {
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    const givenColor = isDark ? 'белым' : 'чёрным';
+    return `Решено за ${dt.toFixed(1)} мс. Условия — ${givenColor}, решение — зелёным.`;
+  });
 });
 
 /* ============================================================
@@ -730,8 +751,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
       cellEls[r][c].input.value = '';
       cellEls[r][c].wrap.classList.remove('given', 'conflict');
     }
-  statusEl.className = 'status';
-  statusEl.textContent = '';
+  clearStatus();
   checkConflicts();
 });
 
