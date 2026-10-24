@@ -2,6 +2,9 @@
 
 This program was created by AI under my careful guidance. 🙂
 
+**Note:** the interface is in Russian, but the instructions below are in
+English. The buttons should be fairly self-explanatory.
+
 I vibe-coded the simplest browser Sudoku solver — no external scripts, fonts,
 or CDNs, everything inside one HTML file. Opens in modern browsers without
 any issues and works without an internet connection.
@@ -15,9 +18,11 @@ the puzzle in blindly.
 **To mark an empty cell, type `0`** — or just move to the next cell with an
 arrow.
 
-When done, press "Solve" — the last solution is kept in the second panel.
-The program also highlights contradictions automatically (very handy for
-occasional single mistakes).
+When done, press **«Решить»** (Solve) — the last solution is kept in the
+second panel. The program also highlights contradictions automatically
+(very handy for occasional single mistakes).
+
+To reset the board, press **«Очистить»** (Clear).
 
 After solving, solver-filled digits are green, and digits entered by you
 are dark.
@@ -49,7 +54,7 @@ Full license text — in the [LICENSE](LICENSE) file.
 **Чтобы указать пустую ячейку, введите `0`** — или просто стрелкой
 перейдите на следующую ячейку.
 
-В конце ввода нажмите «Решить» — последнее решение будет сохранено во
+В конце ввода нажмите **«Решить»** — последнее решение будет сохранено во
 втором поле. Программа также автоматически подсветит противоречия (очень
 помогает при случайных и одиночных ошибках).
 
